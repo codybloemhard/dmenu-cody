@@ -1,0 +1,2 @@
+sudo cp config.change.h config.h
+sudo make install
