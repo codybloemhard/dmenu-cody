@@ -1,0 +1,393 @@
+[1mdiff --git a/LICENSE b/LICENSE[m
+[1mindex 9762166..3afd28e 100644[m
+[1m--- a/LICENSE[m
+[1m+++ b/LICENSE[m
+[36m@@ -8,7 +8,7 @@[m [mMIT/X Consortium License[m
+ © 2009 Markus Schnalke <meillo@marmaro.de>[m
+ © 2009 Evan Gates <evan.gates@gmail.com>[m
+ © 2010-2012 Connor Lane Smith <cls@lubutu.com>[m
+[31m-© 2014-2019 Hiltjo Posthuma <hiltjo@codemadness.org>[m
+[32m+[m[32m© 2014-2020 Hiltjo Posthuma <hiltjo@codemadness.org>[m
+ © 2015-2019 Quentin Rameau <quinq@fifth.space>[m
+ [m
+ Permission is hereby granted, free of charge, to any person obtaining a[m
+[1mdiff --git a/Makefile b/Makefile[m
+[1mindex a7cd04f..a03a95c 100644[m
+[1m--- a/Makefile[m
+[1m+++ b/Makefile[m
+[36m@@ -4,71 +4,61 @@[m
+ include config.mk[m
+ [m
+ SRC = drw.c dmenu.c stest.c util.c[m
+[31m-OBJ = ${SRC:.c=.o}[m
+[32m+[m[32mOBJ = $(SRC:.c=.o)[m
+ [m
+ all: options dmenu stest[m
+ [m
+ options:[m
+ 	@echo dmenu build options:[m
+[31m-	@echo "CFLAGS   = ${CFLAGS}"[m
+[31m-	@echo "LDFLAGS  = ${LDFLAGS}"[m
+[31m-	@echo "CC       = ${CC}"[m
+[32m+[m	[32m@echo "CFLAGS   = $(CFLAGS)"[m
+[32m+[m	[32m@echo "LDFLAGS  = $(LDFLAGS)"[m
+[32m+[m	[32m@echo "CC       = $(CC)"[m
+ [m
+ .c.o:[m
+[31m-	@echo CC $<[m
+[31m-	@${CC} -c ${CFLAGS} $<[m
+[32m+[m	[32m$(CC) -c $(CFLAGS) $<[m
+ [m
+ config.h:[m
+[31m-	@echo creating $@ from config.def.h[m
+[31m-	@cp config.def.h $@[m
+[32m+[m	[32mcp config.def.h $@[m
+ [m
+[31m-${OBJ}: arg.h config.h config.mk drw.h[m
+[32m+[m[32m$(OBJ): arg.h config.h config.mk drw.h[m
+ [m
+ dmenu: dmenu.o drw.o util.o[m
+[31m-	@echo CC -o $@[m
+[31m-	@${CC} -o $@ dmenu.o drw.o util.o ${LDFLAGS}[m
+[32m+[m	[32m$(CC) -o $@ dmenu.o drw.o util.o $(LDFLAGS)[m
+ [m
+ stest: stest.o[m
+[31m-	@echo CC -o $@[m
+[31m-	@${CC} -o $@ stest.o ${LDFLAGS}[m
+[32m+[m	[32m$(CC) -o $@ stest.o $(LDFLAGS)[m
+ [m
+ clean:[m
+[31m-	@echo cleaning[m
+[31m-	@rm -f dmenu stest ${OBJ} dmenu-${VERSION}.tar.gz[m
+[32m+[m	[32mrm -f dmenu stest $(OBJ) dmenu-$(VERSION).tar.gz[m
+ [m
+ dist: clean[m
+[31m-	@echo creating dist tarball[m
+[31m-	@mkdir -p dmenu-${VERSION}[m
+[31m-	@cp LICENSE Makefile README arg.h config.def.h config.mk dmenu.1 \[m
+[31m-		drw.h util.h dmenu_path dmenu_run stest.1 ${SRC} \[m
+[31m-		dmenu-${VERSION}[m
+[31m-	@tar -cf dmenu-${VERSION}.tar dmenu-${VERSION}[m
+[31m-	@gzip dmenu-${VERSION}.tar[m
+[31m-	@rm -rf dmenu-${VERSION}[m
+[32m+[m	[32mmkdir -p dmenu-$(VERSION)[m
+[32m+[m	[32mcp LICENSE Makefile README arg.h config.def.h config.mk dmenu.1\[m
+[32m+[m		[32mdrw.h util.h dmenu_path dmenu_run stest.1 $(SRC)\[m
+[32m+[m		[32mdmenu-$(VERSION)[m
+[32m+[m	[32mtar -cf dmenu-$(VERSION).tar dmenu-$(VERSION)[m
+[32m+[m	[32mgzip dmenu-$(VERSION).tar[m
+[32m+[m	[32mrm -rf dmenu-$(VERSION)[m
+ [m
+ install: all[m
+[31m-	@echo installing executables to ${DESTDIR}${PREFIX}/bin[m
+[31m-	@mkdir -p ${DESTDIR}${PREFIX}/bin[m
+[31m-	@cp -f dmenu dmenu_path dmenu_run stest ${DESTDIR}${PREFIX}/bin[m
+[31m-	@chmod 755 ${DESTDIR}${PREFIX}/bin/dmenu[m
+[31m-	@chmod 755 ${DESTDIR}${PREFIX}/bin/dmenu_path[m
+[31m-	@chmod 755 ${DESTDIR}${PREFIX}/bin/dmenu_run[m
+[31m-	@chmod 755 ${DESTDIR}${PREFIX}/bin/stest[m
+[31m-	@echo installing manual pages to ${DESTDIR}${MANPREFIX}/man1[m
+[31m-	@mkdir -p ${DESTDIR}${MANPREFIX}/man1[m
+[31m-	@sed "s/VERSION/${VERSION}/g" < dmenu.1 > ${DESTDIR}${MANPREFIX}/man1/dmenu.1[m
+[31m-	@sed "s/VERSION/${VERSION}/g" < stest.1 > ${DESTDIR}${MANPREFIX}/man1/stest.1[m
+[31m-	@chmod 644 ${DESTDIR}${MANPREFIX}/man1/dmenu.1[m
+[31m-	@chmod 644 ${DESTDIR}${MANPREFIX}/man1/stest.1[m
+[32m+[m	[32mmkdir -p $(DESTDIR)$(PREFIX)/bin[m
+[32m+[m	[32mcp -f dmenu dmenu_path dmenu_run stest $(DESTDIR)$(PREFIX)/bin[m
+[32m+[m	[32mchmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu[m
+[32m+[m	[32mchmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu_path[m
+[32m+[m	[32mchmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu_run[m
+[32m+[m	[32mchmod 755 $(DESTDIR)$(PREFIX)/bin/stest[m
+[32m+[m	[32mmkdir -p $(DESTDIR)$(MANPREFIX)/man1[m
+[32m+[m	[32msed "s/VERSION/$(VERSION)/g" < dmenu.1 > $(DESTDIR)$(MANPREFIX)/man1/dmenu.1[m
+[32m+[m	[32msed "s/VERSION/$(VERSION)/g" < stest.1 > $(DESTDIR)$(MANPREFIX)/man1/stest.1[m
+[32m+[m	[32mchmod 644 $(DESTDIR)$(MANPREFIX)/man1/dmenu.1[m
+[32m+[m	[32mchmod 644 $(DESTDIR)$(MANPREFIX)/man1/stest.1[m
+ [m
+ uninstall:[m
+[31m-	@echo removing executables from ${DESTDIR}${PREFIX}/bin[m
+[31m-	@rm -f ${DESTDIR}${PREFIX}/bin/dmenu[m
+[31m-	@rm -f ${DESTDIR}${PREFIX}/bin/dmenu_path[m
+[31m-	@rm -f ${DESTDIR}${PREFIX}/bin/dmenu_run[m
+[31m-	@rm -f ${DESTDIR}${PREFIX}/bin/stest[m
+[31m-	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1[m
+[31m-	@rm -f ${DESTDIR}${MANPREFIX}/man1/dmenu.1[m
+[31m-	@rm -f ${DESTDIR}${MANPREFIX}/man1/stest.1[m
+[32m+[m	[32mrm -f $(DESTDIR)$(PREFIX)/bin/dmenu\[m
+[32m+[m		[32m$(DESTDIR)$(PREFIX)/bin/dmenu_path\[m
+[32m+[m		[32m$(DESTDIR)$(PREFIX)/bin/dmenu_run\[m
+[32m+[m		[32m$(DESTDIR)$(PREFIX)/bin/stest\[m
+[32m+[m		[32m$(DESTDIR)$(MANPREFIX)/man1/dmenu.1\[m
+[32m+[m		[32m$(DESTDIR)$(MANPREFIX)/man1/stest.1[m
+ [m
+ .PHONY: all options clean dist install uninstall[m
+[1mdiff --git a/README.md b/README.md[m
+[1mdeleted file mode 100644[m
+[1mindex 0a110fd..0000000[m
+[1m--- a/README.md[m
+[1m+++ /dev/null[m
+[36m@@ -1,2 +0,0 @@[m
+[31m-# dmenu-cody[m
+[31m-Suckless dmenu fork[m
+[1mdiff --git a/build b/build[m
+[1mdeleted file mode 100755[m
+[1mindex 93d8315..0000000[m
+[1m--- a/build[m
+[1m+++ /dev/null[m
+[36m@@ -1,2 +0,0 @@[m
+[31m-sudo cp config.change.h config.h[m
+[31m-sudo make install[m
+[1mdiff --git a/config.change.h b/config.change.h[m
+[1mdeleted file mode 100644[m
+[1mindex 094ddfe..0000000[m
+[1m--- a/config.change.h[m
+[1m+++ /dev/null[m
+[36m@@ -1,23 +0,0 @@[m
+[31m-/* See LICENSE file for copyright and license details. */[m
+[31m-/* Default settings; can be overriden by command line. */[m
+[31m-[m
+[31m-static int topbar = 0;                      /* -b  option; if 0, dmenu appears at bottom     */[m
+[31m-/* -fn option overrides fonts[0]; default X11 font or font set */[m
+[31m-static const char *fonts[] = {[m
+[31m-	"monospace:size=20"[m
+[31m-};[m
+[31m-static const char *prompt = NULL;      /* -p  option; prompt to the left of input field */[m
+[31m-static const char *colors[SchemeLast][2] = {[m
+[31m-	/*     fg         bg       */[m
+[31m-	[SchemeNorm] = { "#eeeeee", "#111111" },[m
+[31m-	[SchemeSel] =  { "#111111", "#eeeeee" },[m
+[31m-	[SchemeOut] =  { "#000000", "#00ffff" },[m
+[31m-};[m
+[31m-/* -l option; if nonzero, dmenu uses vertical list with given number of lines */[m
+[31m-static unsigned int lines = 4;[m
+[31m-[m
+[31m-/*[m
+[31m- * Characters not considered part of a word while deleting words[m
+[31m- * for example: " /?\"&[]"[m
+[31m- */[m
+[31m-static const char worddelimiters[] = " ";[m
+[1mdiff --git a/config.h b/config.h[m
+[1mindex 094ddfe..1edb647 100644[m
+[1m--- a/config.h[m
+[1m+++ b/config.h[m
+[36m@@ -1,20 +1,20 @@[m
+ /* See LICENSE file for copyright and license details. */[m
+ /* Default settings; can be overriden by command line. */[m
+ [m
+[31m-static int topbar = 0;                      /* -b  option; if 0, dmenu appears at bottom     */[m
+[32m+[m[32mstatic int topbar = 1;                      /* -b  option; if 0, dmenu appears at bottom     */[m
+ /* -fn option overrides fonts[0]; default X11 font or font set */[m
+ static const char *fonts[] = {[m
+[31m-	"monospace:size=20"[m
+[32m+[m	[32m"monospace:size=10"[m
+ };[m
+[31m-static const char *prompt = NULL;      /* -p  option; prompt to the left of input field */[m
+[32m+[m[32mstatic const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */[m
+ static const char *colors[SchemeLast][2] = {[m
+ 	/*     fg         bg       */[m
+[31m-	[SchemeNorm] = { "#eeeeee", "#111111" },[m
+[31m-	[SchemeSel] =  { "#111111", "#eeeeee" },[m
+[31m-	[SchemeOut] =  { "#000000", "#00ffff" },[m
+[32m+[m	[32m[SchemeNorm] = { "#bbbbbb", "#222222" },[m
+[32m+[m	[32m[SchemeSel] = { "#eeeeee", "#005577" },[m
+[32m+[m	[32m[SchemeOut] = { "#000000", "#00ffff" },[m
+ };[m
+ /* -l option; if nonzero, dmenu uses vertical list with given number of lines */[m
+[31m-static unsigned int lines = 4;[m
+[32m+[m[32mstatic unsigned int lines      = 0;[m
+ [m
+ /*[m
+  * Characters not considered part of a word while deleting words[m
+[1mdiff --git a/config.mk b/config.mk[m
+[1mindex 80576fe..05d5a3e 100644[m
+[1m--- a/config.mk[m
+[1m+++ b/config.mk[m
+[36m@@ -1,12 +1,12 @@[m
+ # dmenu version[m
+[31m-VERSION = 4.8[m
+[32m+[m[32mVERSION = 5.0[m
+ [m
+ # paths[m
+ PREFIX = /usr/local[m
+[31m-MANPREFIX = ${PREFIX}/share/man[m
+[32m+[m[32mMANPREFIX = $(PREFIX)/share/man[m
+ [m
+[31m-X11INC = /usr/include/X11[m
+[31m-X11LIB = /usr/lib/X11[m
+[32m+[m[32mX11INC = /usr/X11R6/include[m
+[32m+[m[32mX11LIB = /usr/X11R6/lib[m
+ [m
+ # Xinerama, comment if you don't want it[m
+ XINERAMALIBS  = -lXinerama[m
+[36m@@ -16,16 +16,16 @@[m [mXINERAMAFLAGS = -DXINERAMA[m
+ FREETYPELIBS = -lfontconfig -lXft[m
+ FREETYPEINC = /usr/include/freetype2[m
+ # OpenBSD (uncomment)[m
+[31m-#FREETYPEINC = ${X11INC}/freetype2[m
+[32m+[m[32m#FREETYPEINC = $(X11INC)/freetype2[m
+ [m
+ # includes and libs[m
+[31m-INCS = -I${X11INC} -I${FREETYPEINC}[m
+[31m-LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS}[m
+[32m+[m[32mINCS = -I$(X11INC) -I$(FREETYPEINC)[m
+[32m+[m[32mLIBS = -L$(X11LIB) -lX11 $(XINERAMALIBS) $(FREETYPELIBS)[m
+ [m
+ # flags[m
+[31m-CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}[m
+[31m-CFLAGS   = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}[m
+[31m-LDFLAGS  = -s ${LIBS}[m
+[32m+[m[32mCPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\" $(XINERAMAFLAGS)[m
+[32m+[m[32mCFLAGS   = -std=c99 -pedantic -Wall -Os $(INCS) $(CPPFLAGS)[m
+[32m+[m[32mLDFLAGS  = $(LIBS)[m
+ [m
+ # compiler and linker[m
+ CC = cc[m
+[1mdiff --git a/dmenu b/dmenu[m
+[1mindex 16aff18..60deb5d 100755[m
+Binary files a/dmenu and b/dmenu differ
+[1mdiff --git a/dmenu.c b/dmenu.c[m
+[1mindex bdb500d..65f25ce 100644[m
+[1m--- a/dmenu.c[m
+[1m+++ b/dmenu.c[m
+[36m@@ -37,7 +37,7 @@[m [mstruct item {[m
+ static char text[BUFSIZ] = "";[m
+ static char *embed;[m
+ static int bh, mw, mh;[m
+[31m-static int inputw = 0, promptw, passwd = 0;[m
+[32m+[m[32mstatic int inputw = 0, promptw;[m
+ static int lrpad; /* sum of left and right padding */[m
+ static size_t cursor;[m
+ static struct item *items = NULL;[m
+[36m@@ -89,15 +89,6 @@[m [mcalcoffsets(void)[m
+ 			break;[m
+ }[m
+ [m
+[31m-static int[m
+[31m-max_textw(void)[m
+[31m-{[m
+[31m-    int len = 0;[m
+[31m-    for (struct item *item = items; item && item->text; item++)[m
+[31m-        len = MAX(TEXTW(item->text), len);[m
+[31m-    return len;[m
+[31m-}[m
+[31m-[m
+ static void[m
+ cleanup(void)[m
+ {[m
+[36m@@ -141,7 +132,6 @@[m [mdrawmenu(void)[m
+ 	unsigned int curpos;[m
+ 	struct item *item;[m
+ 	int x = 0, y = 0, w;[m
+[31m-    char *censort;[m
+ [m
+ 	drw_setscheme(drw, scheme[SchemeNorm]);[m
+ 	drw_rect(drw, 0, 0, mw, mh, 1, 1);[m
+[36m@@ -153,13 +143,7 @@[m [mdrawmenu(void)[m
+ 	/* draw input field */[m
+ 	w = (lines > 0 || !matches) ? mw - x : inputw;[m
+ 	drw_setscheme(drw, scheme[SchemeNorm]);[m
+[31m-	//drw_text(drw, x, 0, w, bh, lrpad / 2, text, 0);[m
+[31m-    if (passwd) {[m
+[31m-        censort = ecalloc(1, sizeof(text));[m
+[31m-        memset(censort, '*', strlen(text));[m
+[31m-        drw_text(drw, x, 0, w, bh, lrpad / 2, censort, 0);[m
+[31m-        free(censort);[m
+[31m-    } else drw_text(drw, x, 0, w, bh, lrpad / 2, text, 0);[m
+[32m+[m	[32mdrw_text(drw, x, 0, w, bh, lrpad / 2, text, 0);[m
+ [m
+ 	curpos = TEXTW(text) - TEXTW(&text[cursor]);[m
+ 	if ((curpos += lrpad / 2 - 1) < w) {[m
+[36m@@ -627,7 +611,6 @@[m [msetup(void)[m
+ 	bh = drw->fonts->h + 2;[m
+ 	lines = MAX(lines, 0);[m
+ 	mh = (lines + 1) * bh;[m
+[31m-    promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;[m
+ #ifdef XINERAMA[m
+ 	i = 0;[m
+ 	if (parentwin == root && (info = XineramaQueryScreens(dpy, &n))) {[m
+[36m@@ -653,9 +636,10 @@[m [msetup(void)[m
+ 			for (i = 0; i < n; i++)[m
+ 				if (INTERSECT(x, y, 1, 1, info[i]))[m
+ 					break;[m
+[31m-        mw = MIN(MAX(max_textw() + promptw, 100), info[i].width);[m
+[31m-        x = info[i].x_org + ((info[i].width  - mw) / 2);[m
+[31m-        y = info[i].y_org + ((info[i].height - mh) / 2);[m
+[32m+[m
+[32m+[m		[32mx = info[i].x_org;[m
+[32m+[m		[32my = info[i].y_org + (topbar ? 0 : info[i].height - mh);[m
+[32m+[m		[32mmw = info[i].width;[m
+ 		XFree(info);[m
+ 	} else[m
+ #endif[m
+[36m@@ -663,10 +647,11 @@[m [msetup(void)[m
+ 		if (!XGetWindowAttributes(dpy, parentwin, &wa))[m
+ 			die("could not get embedding window attributes: 0x%lx",[m
+ 			    parentwin);[m
+[31m-	    mw = MIN(MAX(max_textw() + promptw, 100), wa.width);[m
+[31m-        x = (wa.width  - mw) / 2;[m
+[31m-        y = (wa.height - mh) / 2;[m
+[31m-    }[m
+[32m+[m		[32mx = 0;[m
+[32m+[m		[32my = topbar ? 0 : wa.height - mh;[m
+[32m+[m		[32mmw = wa.width;[m
+[32m+[m	[32m}[m
+[32m+[m	[32mpromptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;[m
+ 	inputw = MIN(inputw, mw/3);[m
+ 	match();[m
+ [m
+[36m@@ -704,7 +689,7 @@[m [msetup(void)[m
+ static void[m
+ usage(void)[m
+ {[m
+[31m-	fputs("usage: dmenu [-bfiPv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"[m
+[32m+[m	[32mfputs("usage: dmenu [-bfiv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"[m
+ 	      "             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]\n", stderr);[m
+ 	exit(1);[m
+ }[m
+[36m@@ -727,9 +712,7 @@[m [mmain(int argc, char *argv[])[m
+ 		else if (!strcmp(argv[i], "-i")) { /* case-insensitive item matching */[m
+ 			fstrncmp = strncasecmp;[m
+ 			fstrstr = cistrstr;[m
+[31m-	    } else if (!strcmp(argv[i], "-P"))   /* is the input a password */[m
+[31m-            passwd = 1;    [m
+[31m-        else if (i + 1 == argc)[m
+[32m+[m		[32m} else if (i + 1 == argc)[m
+ 			usage();[m
+ 		/* these options take one argument */[m
+ 		else if (!strcmp(argv[i], "-l"))   /* number of lines in vertical list */[m
+[1mdiff --git a/dmenu_path b/dmenu_path[m
+[1mindex 338bac4..3a7cda7 100755[m
+[1m--- a/dmenu_path[m
+[1m+++ b/dmenu_path[m
+[36m@@ -1,10 +1,10 @@[m
+ #!/bin/sh[m
+[31m-cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}[m
+[31m-if [ -d "$cachedir" ]; then[m
+[31m-	cache=$cachedir/dmenu_run[m
+[31m-else[m
+[31m-	cache=$HOME/.dmenu_cache # if no xdg dir, fall back to dotfile in ~[m
+[31m-fi[m
+[32m+[m
+[32m+[m[32mcachedir="${XDG_CACHE_HOME:-"$HOME/.cache"}"[m
+[32m+[m[32mcache="$cachedir/dmenu_run"[m
+[32m+[m
+[32m+[m[32m[ ! -e "$cachedir" ] && mkdir -p "$cachedir"[m
+[32m+[m
+ IFS=:[m
+ if stest -dqr -n "$cache" $PATH; then[m
+ 	stest -flx $PATH | sort -u | tee "$cache"[m
+[1mdiff --git a/drw.c b/drw.c[m
+[1mindex 8fd1ca4..4cdbcbe 100644[m
+[1m--- a/drw.c[m
+[1m+++ b/drw.c[m
+[36m@@ -95,6 +95,7 @@[m [mdrw_free(Drw *drw)[m
+ {[m
+ 	XFreePixmap(drw->dpy, drw->drawable);[m
+ 	XFreeGC(drw->dpy, drw->gc);[m
+[32m+[m	[32mdrw_fontset_free(drw->fonts);[m
+ 	free(drw);[m
+ }[m
+ [m
+[1mdiff --git a/stest b/stest[m
+[1mindex 8763977..4225857 100755[m
+Binary files a/stest and b/stest differ
