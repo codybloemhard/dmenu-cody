@@ -41,6 +41,7 @@ struct item {
 static char text[BUFSIZ] = "";
 static char *embed;
 static int bh, mw, mh;
+static unsigned int dmw = 0; /* make dmenu this wide */
 static int inputw = 0, promptw, passwd = 0;
 static int lrpad; /* sum of left and right padding */
 static size_t cursor;
@@ -791,7 +792,7 @@ setup(void)
 			for (i = 0; i < n; i++)
 				if (INTERSECT(x, y, 1, 1, info[i]))
 					break;
-        mw = MIN(MAX(max_textw() + promptw, 100), info[i].width);
+	mw = (dmw > 0 ? dmw : MIN(MAX(max_textw() + promptw, 100), info[i].width));
         x = info[i].x_org + ((info[i].width  - mw) / 2);
         y = info[i].y_org + ((info[i].height - mh) / 2);
 		XFree(info);
@@ -801,7 +802,7 @@ setup(void)
 		if (!XGetWindowAttributes(dpy, parentwin, &wa))
 			die("could not get embedding window attributes: 0x%lx",
 			    parentwin);
-	    mw = MIN(MAX(max_textw() + promptw, 100), wa.width);
+    	    mw = (dmw > 0 ? dmw : MIN(MAX(max_textw() + promptw, 100), wa.width));
         x = (wa.width  - mw) / 2;
         y = (wa.height - mh) / 2;
     }
@@ -922,6 +923,8 @@ main(int argc, char *argv[])
 		/* these options take one argument */
 		else if (!strcmp(argv[i], "-l"))   /* number of lines in vertical list */
 			lines = atoi(argv[++i]);
+		else if (!strcmp(argv[i], "-z"))   /* make dmenu this wide */
+			dmw = atoi(argv[++i]);
 		else if (!strcmp(argv[i], "-m"))
 			mon = atoi(argv[++i]);
 		else if (!strcmp(argv[i], "-p"))   /* adds prompt to left of input field */
