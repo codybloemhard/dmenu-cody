@@ -1,8 +1,9 @@
 /* See LICENSE file for copyright and license details. */
 /* Default settings; can be overriden by command line. */
 
-static int topbar = 0;                      /* -b  option; if 0, dmenu appears at bottom     */
-static int fuzzy = 1;
+static unsigned int topbar = 0;   /* -b  option; if 0, dmenu appears at bottom     */
+static const unsigned int fuzzy = 1;
+static const unsigned int border_width = 4;
 /* -fn option overrides fonts[0]; default X11 font or font set */
 static const char *fonts[] = {
 	"monospace:size=20"
