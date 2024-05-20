@@ -1,2 +1,2 @@
-sudo cp config.change.h config.h
-sudo make install
+doas cp config.change.h config.h
+doas make install
